@@ -165,14 +165,14 @@ jobs:
       with:
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
 
-    - name: Install lcov
-      if: startsWith(github.ref, 'refs/tags/') != true
-      run: sudo apt-get install lcov
+    # - name: Install lcov
+    #   if: startsWith(github.ref, 'refs/tags/') != true
+    #   run: sudo apt-get install lcov
 
-    - name: Install codecov
-      if: startsWith(github.ref, 'refs/tags/') != true
-      shell: bash
-      run: sudo pip install codecov
+    # - name: Install codecov
+    #   if: startsWith(github.ref, 'refs/tags/') != true
+    #   shell: bash
+    #   run: sudo pip install codecov
 
     - run: |
         echo "RUNVCPKG_NO_CACHE=1" >> $GITHUB_ENV
@@ -199,18 +199,18 @@ jobs:
       working-directory: "${{ github.workspace }}/build"
 
     # CODE COVERAGE
-    - name: Code coverage - Capture coverage info
-      if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
-      run: lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch
-    - name: Code coverage - Filter out system, external, and unit test source files
-      if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
-      run: lcov --remove coverage.info --output-file coverage_filter.info '/Library/*' '/usr/*' '*/test/*' '*/cmrc/*' '*/entry.cc' '*/simple_highlight.*' --ignore-errors unused
-    - name: Code coverage - Output coverage data for debugging
-      if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
-      run: lcov --list coverage_filter.info
-    - name: Code coverage - Upload to CodeCov
-      if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
-      run:  bash <(curl -s https://codecov.io/bash) -f coverage_filter.info || echo "Codecov did not collect coverage reports"
+    # - name: Code coverage - Capture coverage info
+    #   if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
+    #   run: lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch
+    # - name: Code coverage - Filter out system, external, and unit test source files
+    #   if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
+    #   run: lcov --remove coverage.info --output-file coverage_filter.info '/Library/*' '/usr/*' '*/test/*' '*/cmrc/*' '*/entry.cc' '*/simple_highlight.*' --ignore-errors unused
+    # - name: Code coverage - Output coverage data for debugging
+    #   if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
+    #   run: lcov --list coverage_filter.info
+    # - name: Code coverage - Upload to CodeCov
+    #   if: ${{ startsWith(github.ref, 'refs/tags/') != true && matrix.os == 'ubuntu-latest' }}
+    #   run:  bash <(curl -s https://codecov.io/bash) -f coverage_filter.info || echo "Codecov did not collect coverage reports"
 
     - name: "Check file existence"
       uses: andstor/file-existence-action@v3
